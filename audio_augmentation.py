@@ -42,17 +42,6 @@ def change_pitch(data, sr):
                                           bins_per_octave=bins_per_octave)
     return y_pitch
 
-
-def change_speed(data):
-    y_speed = data.copy()
-    speed_change = np.random.uniform(low=0.9, high=1.1)
-    tmp = librosa.effects.time_stretch(y_speed.astype('float64'), speed_change)
-    minlen = min(y_speed.shape[0], tmp.shape[0])
-    y_speed *= 0
-    y_speed[0:minlen] = tmp[0:minlen]
-    return y_speed
-
-
 def value_aug(data):
     y_aug = data.copy()
     dyn_change = np.random.uniform(low=1.5, high=3)
@@ -84,7 +73,14 @@ def stretch(data, rate=1):
         streching = np.pad(streching, (0, max(0, input_length - len(streching))), "constant")
     return streching
 
-
+def change_speed(data):
+    y_speed = data.copy()
+    speed_change = np.random.uniform(low=0.9, high=1.1)
+    tmp = librosa.effects.time_stretch(y_speed.astype('float64'), speed_change)
+    minlen = min(y_speed.shape[0], tmp.shape[0])
+    y_speed *= 0
+    y_speed[0:minlen] = tmp[0:minlen]
+    return y_speed
 
 def main():
     print('Augmentation')
