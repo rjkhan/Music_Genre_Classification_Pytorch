@@ -3,7 +3,7 @@ import argparse
 class HParams(object):
     def __init__(self):
         self.dataset_path = './dataset/gtzan'
-        self.feature_path= './dataset/final'
+        self.feature_path= './dataset/feature_augment'
         self.genres =  ['classical', 'country', 'disco', 'hiphop', 'jazz', 'metal', 'pop', 'reggae']
 
         # Feature Parameters
@@ -16,7 +16,7 @@ class HParams(object):
 
         # Training Parameters
         self.device = 1  # 0: CPU, 1: GPU0, 2: GPU1, ...
-        self.batch_size = 16
+        self.batch_size = 128
         self.num_epochs = 26
         self.learning_rate = 1e-2
         self.stopping_rate = 1e-5

@@ -38,21 +38,21 @@ def load_dataset(set_name, hparams):
 
 def get_dataloader(hparams):
     x_train, y_train = load_dataset('train', hparams)
-    # x_valid, y_valid = load_dataset('valid', hparams)
+    x_valid, y_valid = load_dataset('valid', hparams)
     x_test, y_test = load_dataset('test', hparams)
 
     mean = np.mean(x_train)
     std = np.std(x_train)
     x_train = (x_train - mean)/std
-    # x_valid = (x_valid - mean)/std
+    x_valid = (x_valid - mean)/std
     x_test = (x_test - mean)/std
 
     train_set = GTZANDataset(x_train, y_train)
-    # vaild_set = GTZANDataset(x_valid, y_valid)
+    vaild_set = GTZANDataset(x_valid, y_valid)
     test_set = GTZANDataset(x_test, y_test)
 
     train_loader = DataLoader(train_set, batch_size=hparams.batch_size, shuffle=True, drop_last=False)
-    # valid_loader = DataLoader(vaild_set, batch_size=hparams.batch_size, shuffle=False, drop_last=False)
+    valid_loader = DataLoader(vaild_set, batch_size=hparams.batch_size, shuffle=False, drop_last=False)
     test_loader = DataLoader(test_set, batch_size=hparams.batch_size, shuffle=False, drop_last=False)
 
-    return train_loader, test_loader
+    return train_loader, valid_loader, test_loader

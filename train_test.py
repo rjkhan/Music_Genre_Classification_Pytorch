@@ -11,10 +11,9 @@ torch.backends.cudnn.benchmark = False
 import numpy as np
 np.random.seed(0)
 
-from sklearn.metrics import confusion_matrix
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 import data_manager
-from net import *
+from src.cnn2D.model.custom_upchannel import *
 from hparams import hparams
 # Wrapper class to run PyTorch model
 class Runner(object):
@@ -86,19 +85,19 @@ def device_name(device):
     return device_name
 
 def main():
-    train_loader, test_loader = data_manager.get_dataloader(hparams)
+    train_loader, valid_loader, test_loader = data_manager.get_dataloader(hparams)
     runner = Runner(hparams)
 
     print('Training on ' + device_name(hparams.device))
     for epoch in range(hparams.num_epochs):
         train_loss, train_acc = runner.run(train_loader, 'train')
-        test_loss, test_acc = runner.run(test_loader, 'eval')
+        valid_loss, valid_acc = runner.run(valid_loader, 'eval')
 
-        print("[Epoch %d/%d] [Train Loss: %.4f] [Train Acc: %.4f]" %
-              (epoch + 1, hparams.num_epochs, train_loss, train_acc))
-        #
-        # if runner.early_stop(valid_loss, epoch + 1):
-        #     break
+        print("[Epoch %d/%d] [Train Loss: %.4f] [Train Acc: %.4f] [Valid Loss: %.4f] [Valid Acc: %.4f]" %
+              (epoch + 1, hparams.num_epochs, train_loss, train_acc, valid_loss, valid_acc))
+
+        if runner.early_stop(valid_loss, epoch + 1):
+            break
 
     test_loss, test_acc = runner.run(test_loader, 'eval')
     print("Training Finished")
